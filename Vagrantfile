@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
     elk.vm.network "private_network", bridge: "vboxnet5", ip: "10.10.10.146"
     elk.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--paravirtprovider", "none"]
-      vb.memory = 2048
+      vb.memory = 6188
       vb.customize ["modifyvm", :id, "--vram", "20"]
       file_to_disk = './tmp/elk_dbdisk.vdi'
       unless File.exist?(file_to_disk)
