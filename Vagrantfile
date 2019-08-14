@@ -36,6 +36,7 @@ Vagrant.configure("2") do |config|
   config.vm.define 'elk', autostart: true do |elk|
     elk.vm.box = "cmc/cis-centos76"
     elk.vm.hostname = 'elk.mdt-cmc.local'
+    elk.hostmanager.aliases = %w(kibana.mdt-cmc.local cerebro.mdt-cmc.local)
     elk.vm.network "private_network", bridge: "vboxnet5", ip: "10.10.10.146"
     elk.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--paravirtprovider", "none"]

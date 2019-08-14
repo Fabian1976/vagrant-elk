@@ -23,3 +23,17 @@ puppet/modules/puppetserver_gem
 puppet/modules/selinux
 puppet/modules/stdlib
 puppet/modules/translate
+
+puppet/modules/java
+puppet/modules/cis_linux
+puppet/modules/kmod
+puppet/modules/augeasproviders_sysctl
+puppet/modules/augeasproviders_grub
+puppet/modules/augeasproviders_pam
+puppet/modules/elasticsearch
+puppet/modules/elastic_stack
+puppet/modules/yum
+puppet/modules/yumrepo_core
+puppet/modules/datacat
+puppet/modules/kibana
+puppet/modules/nginx
