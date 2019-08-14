@@ -1,7 +1,6 @@
-# vagrant-puppetmaster
+# vagrant-elk
 
-This repo is used to install a Puppetmaster locally on your computer by using Vagrant and virtualbox.
-It can also be used as a starting point to create additional virtualmachines which are managed by a puppetmaster.
+This repo is used to install a Puppetmaster locally on your computer by using Vagrant and virtualbox and install another VM with the ELK stack.
 
 It has been tested on a Mac and instructions are also based on that. Installation instructions for other OS's can be easily found online.
 
@@ -57,12 +56,13 @@ First clone this repo to your computer:
 cd ~
 mkdir Vagrant
 cd Vagrant
-git clone https://github.com/Fabian1976/vagrant-puppetmaster.git ./puppetmaster
-cd puppetmaster/puppet
+git clone https://github.com/Fabian1976/vagrant-elk.git ./elk
+cd elk/puppet
 librarian-puppet install
 ```
-Now you can start the virtual machine:
+Now you can start the virtual machines:
 ```
-cd ~/Vagrant/puppetmaster
+cd ~/Vagrant/elk
 vagrant up
 ```
+`vagrant up` will bring up 2 machines. 1 as a puppetmaster and the other with the ELK stack.
