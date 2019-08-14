@@ -22,7 +22,7 @@ elasticsearch::instances:
       cluster:
         name: 'cmcmdt'
       network:
-        host: 'localhost'
+        host: '127.0.0.1'
       'discovery.zen.ping.unicast.hosts':
         - 'elk.mdt-cmc.local'
       'discovery.zen.minimum_master_nodes': 1
