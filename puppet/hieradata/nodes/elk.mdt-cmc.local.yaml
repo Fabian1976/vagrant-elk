@@ -1,0 +1,14 @@
+---
+roles:
+  - core::role::elasticsearch::server
+
+core::profile::elastic::elasticsearch::datadir: '/database/elasticsearch'
+core::profile::elastic::elasticsearch::vgname: 'vg_elasticsearch'
+elasticsearch::java_install: true
+elasticsearch::manage_repo: false
+elasticsearch::java_package: 'java-1.8.0-openjdk-headless'
+elasticsearch::restart_package_change: true
+elasticsearch::version: '6.7.0'
+elasticsearch::jvm_options:
+  - '-Xms2g'
+  - '-Xmx2g'
