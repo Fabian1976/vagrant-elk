@@ -30,8 +30,8 @@ Vagrant.configure("2") do |config|
     puppetmaster.vm.synced_folder 'puppet/manifests', '/etc/puppetlabs/code/environments/production/manifests/'
     puppetmaster.vm.synced_folder 'puppet/modules', '/etc/puppetlabs/code/environments/production/modules/'
     puppetmaster.vm.provision :shell,
-      path: 'bootstrap.sh',
-      upload_path: '/home/vagrant/bootstrap_puppetmaster.sh'
+      path: 'bootstrap_puppetmaster.sh',
+      upload_path: '/home/vagrant/bootstrap.sh'
   end
   config.vm.define 'elk', autostart: true do |elk|
     elk.vm.box = "cmc/cis-centos76"
