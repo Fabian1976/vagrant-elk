@@ -24,3 +24,4 @@ mod 'cmc-cis_linux',
 mod 'elastic-elasticsearch', '6.3.1'
 mod 'elastic-kibana', '6.3.0'
 mod 'jfryman-nginx', '0.3.0'
+mod 'elastic-logstash', '6.1.2'

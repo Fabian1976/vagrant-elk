@@ -1,8 +1,10 @@
 ---
 roles:
+  - fw
   - core::role::elasticsearch::server
   - core::role::kibana::server
   - core::role::nginx::server
+  - core::role::logstash::server
 
 core::profile::elastic::elasticsearch::datadir: '/database/elasticsearch'
 core::profile::elastic::elasticsearch::vgname: 'vg_elasticsearch'
@@ -26,6 +28,8 @@ elasticsearch::instances:
       'discovery.zen.ping.unicast.hosts':
         - 'elk.mdt-cmc.local'
       'discovery.zen.minimum_master_nodes': 1
+      xpack:
+        security.enabled: false
 
 kibana::ensure: '6.7.0'
 kibana::manage_repo: true
@@ -57,3 +61,30 @@ nginx::nginx_locations:
     proxy_set_header:
       - 'Upgrade $http_upgrade'
       - "Connection 'upgrade'"
+
+core::profile::elastic::logstash::configs:
+  input-puppet_report:
+    content: 'input {
+  tcp {
+    type => "puppet-report"
+    port => 5999
+    codec => json
+  }
+}'
+  output-elasticsearch:
+    content: 'output {
+  if [type] {
+    elasticsearch {
+      hosts => [ "127.0.0.1:9200" ]
+      index => "%{literal("%")}{type}-%{literal("%")}{+YYYY.MM.dd}"
+      document_type => "%{literal("%")}{type}"
+    }
+  }
+}'
+
+fw::firewall_rules:
+  '200 puppet_reporter':
+    dport: '5999'
+    proto: 'tcp'
+    action: 'accept'
+    chain: "%{::input_chain_name}"

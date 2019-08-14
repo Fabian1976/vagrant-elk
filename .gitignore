@@ -37,3 +37,4 @@ puppet/modules/yumrepo_core
 puppet/modules/datacat
 puppet/modules/kibana
 puppet/modules/nginx
+puppet/modules/logstash
