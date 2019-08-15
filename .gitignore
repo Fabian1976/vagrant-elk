@@ -3,6 +3,7 @@
 Gemfile.lock
 tmp/
 .vagrant/
+software/
 puppet/.tmp
 puppet/.librarian
 puppet/Puppetfile.lock
