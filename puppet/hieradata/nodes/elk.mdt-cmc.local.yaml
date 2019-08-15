@@ -5,6 +5,7 @@ roles:
   - core::role::kibana::server
   - core::role::nginx::server
   - core::role::logstash::server
+  - core::role::cerebro::server
 
 core::profile::elastic::elasticsearch::datadir: '/database/elasticsearch'
 core::profile::elastic::elasticsearch::vgname: 'vg_elasticsearch'
@@ -22,7 +23,7 @@ elasticsearch::instances:
   es-01:
     config:
       cluster:
-        name: 'cmcmdt'
+        name: 'mdtcmc'
       network:
         host: '127.0.0.1'
       'discovery.zen.ping.unicast.hosts':
@@ -52,11 +53,23 @@ nginx::nginx_vhosts:
     listen_port: 80
     rewrite_to_https: false
     use_default_location: false
+  'cerebro.mdt-cmc.local':
+    listen_port: 80
+    rewrite_to_https: false
+    use_default_location: false
 nginx::nginx_locations:
   kibana:
     ensure: 'present'
     proxy: 'http://localhost:5601'
     vhost: 'kibana.mdt-cmc.local'
+    location: '/'
+    proxy_set_header:
+      - 'Upgrade $http_upgrade'
+      - "Connection 'upgrade'"
+  cerebro:
+    ensure: 'present'
+    proxy: 'http://localhost:9000'
+    vhost: 'cerebro.mdt-cmc.local'
     location: '/'
     proxy_set_header:
       - 'Upgrade $http_upgrade'
@@ -88,3 +101,9 @@ fw::firewall_rules:
     proto: 'tcp'
     action: 'accept'
     chain: "%{::input_chain_name}"
+
+cerebro::version: '0.8.3'
+cerebro::package_url: "/vagrant/software/cerebro-%{lookup('cerebro::version')}.tgz"
+cerebro::hosts:
+  - name: 'mdtcmc'
+    host: 'http://localhost:9200'

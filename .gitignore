@@ -39,3 +39,7 @@ puppet/modules/datacat
 puppet/modules/kibana
 puppet/modules/nginx
 puppet/modules/logstash
+puppet/modules/cerebro
+puppet/modules/systemd
+puppet/modules/extlib
+puppet/modules/archive
