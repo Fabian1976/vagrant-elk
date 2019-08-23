@@ -43,3 +43,4 @@ puppet/modules/cerebro
 puppet/modules/systemd
 puppet/modules/extlib
 puppet/modules/archive
+puppet/modules/logstash_reporter

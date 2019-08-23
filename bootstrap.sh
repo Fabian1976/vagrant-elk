@@ -46,5 +46,8 @@ yum -y remove firewalld
 yum -y install iptables-services
 
 #Apply puppet manifest
+#Run it three times becasue of a bug in the Elasticsearch puppet code
+puppet agent -t; true
+puppet agent -t; true
 puppet agent -t; true
 systemctl start puppet

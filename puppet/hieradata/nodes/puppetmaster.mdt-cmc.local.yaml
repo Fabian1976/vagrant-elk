@@ -20,3 +20,5 @@ core::profile::puppet::hiera::hierarchy:
   - 'clusters/%{literal("%")}{cluster}'
   - 'defaults/%{literal("%")}{::osfamily}'
   - 'defaults'
+
+core::profile::puppet::master::logstash_host: 'elk.mdt-cmc.local'
