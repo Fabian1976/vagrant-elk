@@ -1,0 +1,12 @@
+---
+dsc_modules:
+  - 'xTimeZone'
+
+core::profile::zabbix::agent::version: '3.4.10'
+#wazuh
+wazuh::client::enable_wodle_openscap: false
+wazuh::client::ossec_local_files:
+  'Security': 'eventlog'
+
+core::profile::cmc::base::puppet_version: 'present'
+core::profile::cmc::base::windows_timezone: 'W. Europe Standard Time'

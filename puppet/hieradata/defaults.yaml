@@ -1,0 +1,69 @@
+---
+roles:
+  - core::role::cmc::base
+
+#Common
+core::profile::cmc::base::entropy_agent: false
+core::profile::cmc::base::virt_guest_agent_enabled: false
+core::profile::cmc::base::purge_yum_repos: false
+core::profile::cmc::base::puppet_version: '1.10.12'
+postfix::relay_host: '127.0.0.1'
+postfix::myorigin: 'mdt-cmc.local'
+timezone::timezone: 'Europe/Amsterdam'
+core::profile::ntp::client::ntp_server:
+  - '0.centos.pool.ntp.org'
+  - '1.centos.pool.ntp.org'
+core::profile::openssh::server::sshd_config_allowgroups:
+  - 'vagrant'
+core::profile::cmc::base::manage_resolv_conf: false
+#CIS
+core::profile::cmc::base::cis_hardening_enabled: true
+cis_linux::hostallowiprange:
+  - '10.0.2.2/32'
+cis_linux::cisrule_exclude:
+  - 'rule_3_16'
+cis_linux::cisrulesetversion: 'v2_2'
+
+#core::profile::cmc::base::additional_packages:
+#  - 'openscap-scanner'
+
+#Zabbix
+core::profile::cmc::base::zabbix_agent_enabled: false
+#Zabbix config
+zabbix::agent::monitored_by_proxy: 'zabbix-proxy.tux.ot.core.lan'
+core::profile::zabbix::agent::zabbix_server: '192.168.246.17'
+zabbix::agent::manage_resources: true
+zabbix::agent::listenip: '%{::ipaddress}'
+
+#Filebeat
+core::profile::cmc::base::filebeat_agent_enabled: false
+#Filebeat config
+core::profile::elastic::filebeat::package_ensure: '6.3.2'
+filebeat::major_version: '6'
+core::profile::elastic::filebeat::outputs:
+  'kafka':
+    'hosts':
+      - 'kafka01.tux.ot.core.lan:9092'
+      - 'kafka02.tux.ot.core.lan:9092'
+      - 'kafka03.tux.ot.core.lan:9092'
+    'topic': '%{literal("%")}{[fields.log_topic]}'
+    'partition':
+      'hash':
+        'reachable_only': true
+    'required_acks': '1'
+    'compression': 'none'
+    'max_message_bytes': '1000000'
+
+#OSSec
+core::profile::cmc::base::ossec_agent_enabled: false
+
+#Wazuh
+core::profile::cmc::base::wazuh_agent_enabled: false
+#Wazuh config
+#server
+wazuh::server::manage_repos: false
+wazuh::server::server_package_version: '3.8.2'
+wazuh::server::ossec_service_provider: 'systemd'
+#client
+wazuh::client::manage_repo: false
+wazuh::client::ossec_server_hostname: 'ossec.tux.ot.core.lan'

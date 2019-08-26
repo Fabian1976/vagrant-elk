@@ -26,11 +26,6 @@ puppet/modules/stdlib
 puppet/modules/translate
 
 puppet/modules/java
-puppet/modules/cis_linux
-puppet/modules/kmod
-puppet/modules/augeasproviders_sysctl
-puppet/modules/augeasproviders_grub
-puppet/modules/augeasproviders_pam
 puppet/modules/elasticsearch
 puppet/modules/elastic_stack
 puppet/modules/yum
@@ -44,3 +39,19 @@ puppet/modules/systemd
 puppet/modules/extlib
 puppet/modules/archive
 puppet/modules/logstash_reporter
+
+#CORE
+puppet/modules/cis_linux
+puppet/modules/kmod
+puppet/modules/augeasproviders_sysctl
+puppet/modules/augeasproviders_grub
+puppet/modules/augeasproviders_pam
+puppet/modules/network
+puppet/modules/timezone
+puppet/modules/ntp
+puppet/modules/postfix
+puppet/modules/logrotate
+puppet/modules/facts_core
+puppet/modules/ssh
+puppet/modules/sshkeys_core
+puppet/modules/common

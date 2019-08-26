@@ -1,0 +1,10 @@
+---
+zabbix::agent::zabbix_package_state: '3.4.10'
+zabbix::agent::hostmetadataitem: 'system.uname'
+zabbix::agent::zbx_templates: 'C_Template OS Linux'
+wazuh::client::agent_package_version: '3.8.2'
+wazuh::client::ossec_service_provider: 'systemd'
+core::profile::wazuh::client::active_response: true
+zabbix::agent::logtype: 'file'
+zabbix::agent::logfile: '/var/log/zabbix/zabbix_agentd.log'
+zabbix::agent::logfilesize: '100'
