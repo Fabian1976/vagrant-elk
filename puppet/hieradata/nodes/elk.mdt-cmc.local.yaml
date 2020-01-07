@@ -7,73 +7,14 @@ roles:
   - core::role::logstash::server
   - core::role::cerebro::server
 
+cerebro::version:     '0.8.4'
+cerebro::package_url: "/vagrant/software/cerebro/cerebro-%{lookup('cerebro::version')}.tgz"
+cerebro::hosts:
+  - name: 'mdtcmc'
+    host: 'http://localhost:9200'
+
 core::profile::elastic::elasticsearch::datadir: '/database/elasticsearch'
-core::profile::elastic::elasticsearch::vgname: 'vg_elasticsearch'
-elasticsearch::java_install: true
-elasticsearch::manage_repo: true
-elasticsearch::restart_on_change: true
-elasticsearch::java_package: 'java-1.8.0-openjdk-headless'
-elasticsearch::restart_package_change: true
-elasticsearch::version: '6.7.0'
-elasticsearch::jvm_options:
-  - '-Xms2g'
-  - '-Xmx2g'
-
-elasticsearch::instances:
-  es-01:
-    config:
-      cluster:
-        name: 'mdtcmc'
-      network:
-        host: '127.0.0.1'
-      'discovery.zen.ping.unicast.hosts':
-        - 'elk.mdt-cmc.local'
-      'discovery.zen.minimum_master_nodes': 1
-      xpack:
-        security.enabled: false
-
-kibana::ensure: '6.7.0'
-kibana::manage_repo: true
-kibana::config:
-  'elasticsearch.url': 'http://localhost:9200'
-
-
-nginx::manage_repo: false
-nginx::config::vhost_purge: true
-nginx::config::confd_purge: true
-nginx::config::server_tokens: 'off'
-nginx::nginx_vhosts:
-  'elk.mdt-cmc.local':
-    listen_port: 80
-    maintenance: true
-    maintenance_value: 'return 404'
-    rewrite_to_https: false
-    www_root: 'None'
-  'kibana.mdt-cmc.local':
-    listen_port: 80
-    rewrite_to_https: false
-    use_default_location: false
-  'cerebro.mdt-cmc.local':
-    listen_port: 80
-    rewrite_to_https: false
-    use_default_location: false
-nginx::nginx_locations:
-  kibana:
-    ensure: 'present'
-    proxy: 'http://localhost:5601'
-    vhost: 'kibana.mdt-cmc.local'
-    location: '/'
-    proxy_set_header:
-      - 'Upgrade $http_upgrade'
-      - "Connection 'upgrade'"
-  cerebro:
-    ensure: 'present'
-    proxy: 'http://localhost:9000'
-    vhost: 'cerebro.mdt-cmc.local'
-    location: '/'
-    proxy_set_header:
-      - 'Upgrade $http_upgrade'
-      - "Connection 'upgrade'"
+core::profile::elastic::elasticsearch::vgname:  'vg_elasticsearch'
 
 core::profile::elastic::logstash::configs:
   input-puppet_report:
@@ -95,6 +36,31 @@ core::profile::elastic::logstash::configs:
   }
 }'
 
+elasticsearch::instances:
+  es-01:
+    config:
+      cluster:
+        name: 'mdtcmc'
+      network:
+        host: '127.0.0.1'
+      discovery.zen.ping.unicast.hosts:
+        - 'elk.mdt-cmc.local'
+      discovery.zen.minimum_master_nodes: 1
+      xpack:
+        security.enabled: false
+
+elasticsearch::java_install:           true
+elasticsearch::java_package:           'java-1.8.0-openjdk-headless'
+
+elasticsearch::jvm_options:
+  - '-Xms2g'
+  - '-Xmx2g'
+
+elasticsearch::manage_repo:            true
+elasticsearch::restart_on_change:      true
+elasticsearch::restart_package_change: true
+elasticsearch::version:                '6.7.0'
+
 fw::firewall_rules:
   '200 puppet_reporter':
     dport: '5999'
@@ -102,8 +68,45 @@ fw::firewall_rules:
     action: 'accept'
     chain: "%{::input_chain_name}"
 
-cerebro::version: '0.8.3'
-cerebro::package_url: "/vagrant/software/cerebro-%{lookup('cerebro::version')}.tgz"
-cerebro::hosts:
-  - name: 'mdtcmc'
-    host: 'http://localhost:9200'
+kibana::ensure:      '6.7.0'
+kibana::manage_repo: true
+kibana::config:
+  'elasticsearch.url': 'http://localhost:9200'
+
+
+nginx::manage_repo:           false
+nginx::config::vhost_purge:   true
+nginx::config::confd_purge:   true
+nginx::config::server_tokens: 'off'
+nginx::nginx_vhosts:
+  'elk.mdt-cmc.local':
+    listen_port:       80
+    maintenance:       true
+    maintenance_value: 'return 404'
+    rewrite_to_https:  false
+    www_root:          'None'
+  'kibana.mdt-cmc.local':
+    listen_port:          80
+    rewrite_to_https:     false
+    use_default_location: false
+  'cerebro.mdt-cmc.local':
+    listen_port:          80
+    rewrite_to_https:     false
+    use_default_location: false
+nginx::nginx_locations:
+  kibana:
+    ensure:   'present'
+    proxy:    'http://localhost:5601'
+    vhost:    'kibana.mdt-cmc.local'
+    location: '/'
+    proxy_set_header:
+      - 'Upgrade $http_upgrade'
+      - "Connection 'upgrade'"
+  cerebro:
+    ensure:   'present'
+    proxy:    'http://localhost:9000'
+    vhost:    'cerebro.mdt-cmc.local'
+    location: '/'
+    proxy_set_header:
+      - 'Upgrade $http_upgrade'
+      - "Connection 'upgrade'"

@@ -2,16 +2,10 @@
 roles:
   - core::role::puppet::master_puppetdb
 
-core::profile::puppet::db::postgres_version: '9.6'
-core::profile::puppet::db::manage_package_repo: true
+core::profile::puppet::db::postgres_version:       '9.6'
+core::profile::puppet::db::manage_package_repo:    true
 core::profile::puppet::db::use_seperate_partition: true
 
-core::profile::puppet::master::memory: '2g'
-core::profile::puppet::master::puppetdb_server: 'puppetmaster.mdt-cmc.local'
-core::profile::puppet::master::version: '2.8.1'
-core::profile::puppet::master::use_puppetdb: true
-
-core::profile::puppet::master::manage_hiera: true
 core::profile::puppet::hiera::backends:
   - yaml
 
@@ -21,4 +15,9 @@ core::profile::puppet::hiera::hierarchy:
   - 'defaults/%{literal("%")}{::osfamily}'
   - 'defaults'
 
-core::profile::puppet::master::logstash_host: 'elk.mdt-cmc.local'
+core::profile::puppet::master::logstash_host:   'elk.mdt-cmc.local'
+core::profile::puppet::master::manage_hiera:    true
+core::profile::puppet::master::memory:          '2g'
+core::profile::puppet::master::puppetdb_server: 'puppetmaster.mdt-cmc.local'
+core::profile::puppet::master::use_puppetdb:    true
+core::profile::puppet::master::version:         '2.8.1'

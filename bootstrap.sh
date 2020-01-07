@@ -1,11 +1,4 @@
 #!/bin/bash
-#install epel repo
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-#install entropy agent
-yum install -y haveged
-systemctl start haveged
-systemctl enable haveged
-
 #set correct timezone
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
@@ -45,6 +38,8 @@ EOF'
 yum -y remove firewalld
 yum -y install iptables-services
 
+#Create local repo
+cp /vagrant/software/*.repo /etc/yum.repos.d/
 #Apply puppet manifest
 #Run it three times becasue of a bug in the Elasticsearch puppet code
 puppet agent -t; true

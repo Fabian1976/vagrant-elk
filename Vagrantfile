@@ -9,13 +9,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision :hostmanager
 
   config.vm.define 'puppetmaster', primary: true do |puppetmaster|
-    puppetmaster.vm.box = 'cmc/cis-centos76'
+    puppetmaster.vm.box = 'cmc/cis-centos77'
     puppetmaster.vm.hostname = 'puppetmaster.mdt-cmc.local'
     puppetmaster.vm.network 'private_network', bridge: 'vboxnet5', ip: '10.10.10.32'
 
     puppetmaster.vm.provider 'virtualbox' do |vb|
       vb.customize ["modifyvm", :id, "--paravirtprovider", "none"]
-      vb.memory = 4096
+      vb.memory = 3072
       vb.customize ['modifyvm', :id, '--vram', '20']
       file_to_disk = './tmp/puppetmaster.vdi'
       unless File.exist?(file_to_disk)
@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
       upload_path: '/home/vagrant/bootstrap.sh'
   end
   config.vm.define 'elk', autostart: true do |elk|
-    elk.vm.box = "cmc/cis-centos76"
+    elk.vm.box = "cmc/cis-centos77"
     elk.vm.hostname = 'elk.mdt-cmc.local'
     elk.hostmanager.aliases = %w(kibana.mdt-cmc.local cerebro.mdt-cmc.local)
     elk.vm.network "private_network", bridge: "vboxnet5", ip: "10.10.10.146"
@@ -52,6 +52,34 @@ Vagrant.configure("2") do |config|
     end
     #provision
     elk.vm.provision :shell,
+      path: "bootstrap.sh",
+      upload_path: "/home/vagrant/bootstrap.sh"
+  end
+  config.vm.define 'kafka', autostart: true do |kafka|
+    kafka.vm.box = "cmc/cis-centos77"
+    kafka.vm.hostname = 'kafka.mdt-cmc.local'
+    kafka.hostmanager.aliases = %w(kafka-manager.mdt-cmc.local zookeeper-manager.mdt-cmc.local)
+    kafka.vm.network "private_network", bridge: "vboxnet5", ip: "10.10.10.147"
+    kafka.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--paravirtprovider", "none"]
+      vb.memory = 3072
+      vb.customize ["modifyvm", :id, "--vram", "20"]
+      kafka_disk = './tmp/kafka_dbdisk.vdi'
+      zk_disk = './tmp/zk_dbdisk.vdi'
+      unless File.exist?(kafka_disk)
+        vb.customize ['createhd', '--filename', kafka_disk, '--size', (32 * 1024)]
+      end
+      unless File.exist?(zk_disk)
+        vb.customize ['createhd', '--filename', zk_disk, '--size', (32 * 1024)]
+      end
+      vb.customize ['storagectl', :id, '--name', 'SATA Controller', '--portcount', 4]
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', kafka_disk]
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', zk_disk]
+      vb.gui = true
+      vb.name = "kafka"
+    end
+    #provision
+    kafka.vm.provision :shell,
       path: "bootstrap.sh",
       upload_path: "/home/vagrant/bootstrap.sh"
   end

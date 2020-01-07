@@ -1,0 +1,101 @@
+---
+roles:
+  - core::role::kafka::server_with_zookeeper
+  - core::role::kafka::manager
+  - core::role::nginx::server
+
+core::profile::kafka::server_with_zookeeper::broker_config:
+  'broker.id':                        '0'
+  'default.replication.factor':       1
+  'delete.topic.enable':              true
+  'inter.broker.protocol.version':    '2.0.0'
+  'log.dirs':                         '/database/kafka'
+  'message.max.bytes':                '5120000'
+  'num.partitions':                   3
+  'offsets.topic.replication.factor': 1
+  'replica.fetch.max.bytes':          '5120000'
+  'unclean.leader.election.enable':   false
+  'zookeeper.connect':                'kafka.mdt-cmc.local:2181/kafka'
+
+core::profile::kafka::server_with_zookeeper::kafka_db_disk:
+  - '/dev/sdb'
+core::profile::kafka::server_with_zookeeper::kafka_vgname:     'vg_kafka'
+
+core::profile::kafka::server_with_zookeeper::zookeeper_db_disk:
+  - '/dev/sdc'
+core::profile::kafka::server_with_zookeeper::zookeeper_vgname: 'vg_zookeeper'
+
+fw::firewall_rules:
+  '200 JMX monitoring':
+    dport:  '9990'
+    proto:  'tcp'
+    action: 'accept'
+    chain:  "%{::input_chain_name}"
+
+kafka::version:          '2.0.0'
+kafka::scala_version:    '2.12'
+kafka::mirror_url:       'http://archive.apache.org/dist/'
+kafka::broker::jmx_opts: '-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9990 -Dcom.sun.management.jmxremote.rmi.port=9990'
+
+#Kafka-manager
+kafka_manager::zookeeper_hosts:
+  'kafka.mdt-cmc.local':
+    port: 2181
+kafka_manager::java_install: false
+kafka_manager::version:      '2.0.0.2'
+
+nginx::manage_repo:           false
+nginx::config::vhost_purge:   true
+nginx::config::confd_purge:   true
+nginx::config::server_tokens: 'off'
+nginx::nginx_vhosts:
+  'kafka.mdt-cmc.local':
+    listen_port:       80
+    maintenance:       true
+    maintenance_value: 'return 404'
+    rewrite_to_https:  false
+    www_root:          'None'
+  'kafka-manager.mdt-cmc.local':
+    listen_port:          80
+    rewrite_to_https:     false
+    use_default_location: false
+  'zookeeper-manager.mdt-cmc.local':
+    listen_port:          80
+    rewrite_to_https:     false
+    use_default_location: false
+nginx::nginx_locations:
+  kafka-manager:
+    ensure:   'present'
+    proxy:    'http://localhost:9090'
+    vhost:    'kafka-manager.mdt-cmc.local'
+    location: '/'
+    proxy_set_header:
+      - 'Upgrade $http_upgrade'
+      - "Connection 'upgrade'"
+  zookeeper-manager:
+    ensure:   'present'
+    proxy:    'http://localhost:8080'
+    vhost:    'zookeeper-manager.mdt-cmc.local'
+    location: '/'
+    proxy_set_header:
+      - 'Upgrade $http_upgrade'
+      - "Connection 'upgrade'"
+
+zookeeper::archive_dl_site:     '/vagrant/software/zookeeper'
+zookeeper::archive_version:     '3.4.12'
+zookeeper::client_port:         2181
+zookeeper::election_port:       2888
+zookeeper::id:                  1
+zookeeper::install_java:        true
+zookeeper::install_method:      'archive'
+zookeeper::java_package:        'java-1.8.0-openjdk-headless'
+zookeeper::leader_port:         3888
+zookeeper::manage_service_file: true
+
+zookeeper::packages:
+  - 'zookeeper'
+
+zookeeper::servers:
+  - 'kafka.mdt-cmc.local'
+
+zookeeper::service_name:        'zookeeper'

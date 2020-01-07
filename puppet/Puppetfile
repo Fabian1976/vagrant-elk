@@ -20,7 +20,7 @@ mod 'puppet-fw',
 mod 'puppetlabs-java', '1.5.0'
 mod 'elastic-elasticsearch', '6.3.1'
 mod 'elastic-kibana', '6.3.0'
-mod 'jfryman-nginx', '0.3.0'
+mod 'puppet-nginx', '0.5.0'
 mod 'elastic-logstash', '6.1.2'
 mod 'yano3-cerebro', '0.2.0'
 mod 'elasticsearch-logstash_reporter', '0.1.0'
@@ -40,3 +40,13 @@ mod 'cmc-facts_core',
   :git => 'git@github.com:ConclusionMC/facts_core.git',
   :ref => 'v0.1.1'
 mod 'ghoneycutt-ssh', '3.49.0'
+
+#Kafka/Zookeeper
+mod 'puppet-kafka', '5.3.0'
+mod 'deric-zookeeper', '0.7.7'
+mod 'cmc-kafka_manager',
+  :git => 'git@github.com:ConclusionMC/puppet-kafka_manager.git',
+  :ref => 'v2.0.0'
+mod 'cmc-zk_web',
+  :git => 'git@github.com:ConclusionMC/puppet-zk_web.git',
+  :ref => 'v1.0.1'
