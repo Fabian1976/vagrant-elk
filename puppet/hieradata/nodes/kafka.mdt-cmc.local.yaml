@@ -3,6 +3,7 @@ roles:
   - core::role::kafka::server_with_zookeeper
   - core::role::kafka::manager
   - core::role::nginx::server
+  - core::role::zookeeper::manager
 
 core::profile::kafka::server_with_zookeeper::broker_config:
   'broker.id':                        '0'
@@ -80,6 +81,12 @@ nginx::nginx_locations:
     proxy_set_header:
       - 'Upgrade $http_upgrade'
       - "Connection 'upgrade'"
+
+zk_web::config::users:
+  'admin': 'admin'
+
+zk_web::package_source_base: '/vagrant/software/zk-web'
+zk_web::version:             '1.0'
 
 zookeeper::archive_dl_site:     '/vagrant/software/zookeeper'
 zookeeper::archive_version:     '3.4.12'

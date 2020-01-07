@@ -58,8 +58,7 @@ elasticsearch::jvm_options:
 
 elasticsearch::manage_repo:            true
 elasticsearch::restart_on_change:      true
-elasticsearch::restart_package_change: true
-elasticsearch::version:                '6.7.0'
+elasticsearch::version:                '6.8.3'
 
 fw::firewall_rules:
   '200 puppet_reporter':
@@ -68,11 +67,12 @@ fw::firewall_rules:
     action: 'accept'
     chain: "%{::input_chain_name}"
 
-kibana::ensure:      '6.7.0'
+kibana::ensure:      '6.8.3'
 kibana::manage_repo: true
 kibana::config:
   'elasticsearch.url': 'http://localhost:9200'
 
+logstash::version: '6.8.3'
 
 nginx::manage_repo:           false
 nginx::config::vhost_purge:   true
